@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App de Mensagens e Ofertas</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        
+        /* Estilo para a transição do carrossel */
+        .content-section {
+            transition: min-height 0.3s ease-in-out;
+        }
+        .content-wrapper {
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Estilos do estado recolhido do carrossel */
+        .main-container.collapsed .content-section {
+            min-height: 80px !important;
+        }
+        .main-container.collapsed .content-wrapper .cta-button {
+            display: none !important;
+        }
+        .main-container.collapsed .content-wrapper .content-image {
+            display: none !important;
+        }
+        .main-container.collapsed .content-wrapper .text-center {
+            text-align: center !important;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 flex flex-col items-center p-4">
+
+    <!-- Container Principal do App -->
+    <div class="main-container w-full max-w-2xl flex flex-col gap-4">
+
+        <!-- Seção de Mensagens da Sorte (Topo) -->
+        <div class="message-app-container bg-white shadow-md rounded-xl p-6 text-center flex flex-col items-center justify-center min-h-[150px]">
+            <h1 class="text-2xl font-bold text-gray-900 mb-4">Sua Mensagem da Sorte</h1>
+            <p id="lucky-message-text" class="text-xl md:text-2xl text-gray-700 font-semibold italic min-h-[50px] flex items-center justify-center">Carregando...</p>
+            <button id="get-message-button" class="mt-4 px-6 py-2 bg-emerald-500 text-white font-bold rounded-full shadow-lg hover:bg-emerald-600 transition-colors duration-300">
+                Obter nova mensagem
+            </button>
+        </div>
+
+        <!-- Seção do Carrossel de Ofertas (Inferior) -->
+        <div id="content-area" class="content-section bg-white shadow-md rounded-xl p-4 min-h-[120px] flex flex-col justify-center items-center relative mt-4">
+            <button class="absolute top-2 right-2 p-1 bg-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-400 transition-transform duration-300" id="collapse-button" title="Recolher Carrossel">
+                <svg id="collapse-icon-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M7 10l5 5 5-5z"/></svg>
+                <svg id="collapse-icon-down" style="display: none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M7 14l5-5 5 5z"/></svg>
+            </button>
+            <div class="content-wrapper w-full flex flex-col md:flex-row items-center justify-center gap-4">
+                <img class="w-32 h-32 md:w-24 md:h-24 object-cover rounded-lg flex-shrink-0 shadow-sm" id="content-image" src="" alt="Imagem da Oferta" onerror="this.src='https://placehold.co/120x120/E0E0E0/808080?text=Sem+Imagem';"/>
+                <div class="flex-grow text-center md:text-left flex flex-col items-center md:items-start">
+                    <h3 class="text-xl font-semibold text-gray-900" id="content-title"></h3>
+                    <a class="mt-2 px-6 py-2 bg-blue-500 text-white font-bold rounded-full shadow-md hover:bg-blue-600 transition-all duration-300 text-sm md:text-base" id="cta-button" href="" target="_blank" rel="noopener noreferrer">Veja Mais...</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // --- Lógica de Mensagens da Sorte ---
+        const MESSAGE_API_URL = "https://script.google.com/macros/s/AKfycbxCvoSUZh1JjsnhBdgtUTi46Q9WPTEMyOhKa9TyM3ziPH29Y6g_5KPkEqOJ0ZO6dJJf/exec";
+        const luckyMessageText = document.getElementById('lucky-message-text');
+        const getMessageButton = document.getElementById('get-message-button');
+        const MAX_RETRIES = 3;
+
+        async function fetchLuckyMessage(retries = MAX_RETRIES) {
+            getMessageButton.disabled = true;
+            luckyMessageText.textContent = "Carregando...";
+            
+            try {
+                const response = await fetch(MESSAGE_API_URL);
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (data && data.message) {
+                    luckyMessageText.textContent = data.message;
+                } else {
+                    luckyMessageText.textContent = "Não foi possível carregar as mensagens. A planilha pode estar vazia ou mal configurada.";
+                }
+            } catch (error) {
+                console.error(`Falha ao buscar mensagens:`, error);
+                luckyMessageText.textContent = "Erro de rede. Verifique a sua conexão ou a URL da planilha.";
+            } finally {
+                getMessageButton.disabled = false;
+            }
+        }
+        
+        getMessageButton.addEventListener('click', fetchLuckyMessage);
+
+        // --- Lógica do Carrossel de Ofertas ---
+        // URL da planilha do Google Sheets para as ofertas
+        const OFFERS_CSV_URL = "https://docs.google.com/spreadsheets/d/1S_BVbwRlP4Vpin5clCRC_2ILZTBzuhvqLQrSgUcfPxM/export?format=csv&gid=1150732258";
+
+        const mainContainer = document.querySelector('.main-container');
+        const contentSection = document.getElementById('content-area');
+        const contentWrapper = contentSection.querySelector('.content-wrapper');
+        const contentTitleElement = document.getElementById('content-title');
+        const ctaButton = document.getElementById('cta-button');
+        const contentImage = document.getElementById('content-image');
+        const collapseButton = document.getElementById('collapse-button');
+        const collapseIconUp = document.getElementById('collapse-icon-up');
+        const collapseIconDown = document.getElementById('collapse-icon-down');
+
+        let offersData = [];
+        let offerIntervalId = null;
+        let isCollapsed = false;
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function fetchAndParseCsv(url, retries = MAX_RETRIES) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP! Status: ${response.status}`);
+                }
+                let csvText = await response.text();
+                if (csvText.charCodeAt(0) === 0xFEFF) {
+                    csvText = csvText.substring(1);
+                }
+                const lines = csvText.split('\n').filter(line => line.trim() !== '');
+                if (lines.length <= 1) {
+                    console.warn(`O CSV da URL "${url}" não contém dados válidos.`);
+                    return [];
+                }
+                const headers = lines[0].split(',').map(header => header.trim());
+                
+                const data = [];
+                for (const line of lines.slice(1)) {
+                    const values = line.split(',').map(value => value.trim());
+                    if (values.length >= headers.length) {
+                        const row = {};
+                        headers.forEach((header, index) => {
+                            row[header] = values[index];
+                        });
+                        data.push(row);
+                    }
+                }
+                return data;
+            } catch (error) {
+                console.error(`Tentativa ${MAX_RETRIES - retries + 1} falhou ao buscar ou analisar o CSV de ${url}:`, error);
+                if (retries > 0) {
+                    await delay(1000 * (MAX_RETRIES - retries + 1));
+                    return fetchAndParseCsv(url, retries - 1);
+                }
+                return [];
+            }
+        }
+
+        function updateOffer() {
+            if (offersData.length === 0) {
+                console.warn("Nenhuma oferta disponível para exibir no carrossel.");
+                contentSection.classList.add('hidden');
+                return;
+            } else {
+                contentSection.classList.remove('hidden');
+            }
+
+            contentWrapper.style.opacity = '0';
+
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * offersData.length);
+                const randomOffer = offersData[randomIndex];
+                
+                if (randomOffer) {
+                    const itemName = randomOffer['Item_Name'];
+                    const offerLink = randomOffer['Offer_Link'];
+                    const imgUrl = randomOffer['img'];
+
+                    contentTitleElement.textContent = itemName || "Oferta Especial";
+                    contentImage.src = imgUrl || "https://placehold.co/120x120/E0E0E0/808080?text=Sem+Imagem";
+                    ctaButton.href = offerLink || "#";
+                    ctaButton.setAttribute('target', '_blank');
+                    ctaButton.setAttribute('rel', 'noopener noreferrer');
+                }
+                contentWrapper.style.opacity = '1';
+            }, 500);
+        }
+
+        async function fetchOffersAndStartRotation() {
+            try {
+                const rawOffersData = await fetchAndParseCsv(OFFERS_CSV_URL);
+                offersData = rawOffersData.filter(offer => offer.img && offer.img.trim() !== '');
+
+                if (offersData.length > 0) {
+                    updateOffer();
+                    if (offerIntervalId) {
+                        clearInterval(offerIntervalId);
+                    }
+                    offerIntervalId = setInterval(updateOffer, 10000); // Rota a cada 10 segundos
+                } else {
+                    if (offerIntervalId) {
+                        clearInterval(offerIntervalId);
+                    }
+                    contentSection.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error("Erro ao buscar ofertas:", error);
+                contentSection.classList.add('hidden');
+            }
+        }
+        
+        function toggleCollapse() {
+            isCollapsed = !isCollapsed;
+            if (isCollapsed) {
+                mainContainer.classList.add('collapsed');
+                collapseIconDown.style.display = 'block';
+                collapseIconUp.style.display = 'none';
+                collapseButton.title = "Expandir Carrossel";
+            } else {
+                mainContainer.classList.remove('collapsed');
+                collapseIconDown.style.display = 'none';
+                collapseIconUp.style.display = 'block';
+                collapseButton.title = "Recolher Carrossel";
+            }
+        }
+
+        // --- Início da Execução ---
+        window.onload = function() {
+            fetchLuckyMessage(); // Carrega a primeira mensagem ao iniciar
+            fetchOffersAndStartRotation();
+            collapseButton.addEventListener('click', toggleCollapse);
+        };
+    </script>
+</body>
+</html>
