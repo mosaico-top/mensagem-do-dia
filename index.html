@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sua Mensagem</title>
     <!-- Open Graph Protocol para compartilhamento rico -->
-    <meta property="og:title" content="Sua Mensagem">
-    <meta property="og:description" content="Receba uma mensagem inspiradora.">
+    <meta property="og:title" content="Sua Mensagem do Dia">
+    <meta property="og:description" id="og-description" content="Receba uma mensagem inspiradora e especial.">
     <meta property="og:image" content="logo.png">
     <meta property="og:url" content="https://canvas-app-url.com"> <!-- URL da sua aplicação -->
     <meta property="og:type" content="website">
@@ -121,6 +121,7 @@
         const shareButton = document.getElementById('share-button');
         const copyButton = document.getElementById('copy-button');
         const copyConfirmation = document.getElementById('copy-confirmation');
+        const ogDescriptionMeta = document.getElementById('og-description');
         const MAX_RETRIES = 3;
 
         async function fetchLuckyMessage(retries = MAX_RETRIES) {
@@ -138,6 +139,7 @@
                 const data = await response.json();
                 if (data && data.message) {
                     luckyMessageText.textContent = data.message;
+                    updateMetaTags(data.message);
                     // Verifica se a API de compartilhamento é suportada e mostra o botão correto
                     if (navigator.share) {
                         shareButton.classList.remove('hidden');
@@ -156,6 +158,10 @@
             }
         }
         
+        function updateMetaTags(message) {
+            ogDescriptionMeta.setAttribute('content', message);
+        }
+
         // Função para compartilhar a mensagem usando a API nativa
         function shareMessage() {
             const messageToShare = luckyMessageText.textContent;
@@ -164,7 +170,7 @@
 
             if (navigator.share) {
                 navigator.share({
-                    title: 'Sua Mensagem do Dia',
+                    title: 'Sua Mensagem e Oferta do Dia',
                     text: fullMessage,
                     url: appUrl
                 }).then(() => {
