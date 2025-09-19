@@ -35,6 +35,15 @@
             display: flex;
             justify-content: center;
         }
+
+        /* Estilo para a mensagem de confirmação */
+        .copy-confirmation {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .copy-confirmation.visible {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 flex flex-col items-center p-4">
@@ -44,11 +53,25 @@
 
         <!-- Seção de Mensagens da Sorte (Topo) -->
         <div class="message-app-container bg-white shadow-md rounded-xl p-6 text-center flex flex-col items-center justify-center min-h-[150px]">
-            <h1 class="text-2xl font-bold text-gray-900 mb-4">Sua Mensagem da Sorte</h1>
+            <h1 class="text-2xl font-bold text-gray-900 mb-4">Sua Mensagem do Dia</h1>
             <p id="lucky-message-text" class="text-xl md:text-2xl text-gray-700 font-semibold italic min-h-[50px] flex items-center justify-center">Carregando...</p>
-            <button id="get-message-button" class="mt-4 px-6 py-2 bg-emerald-500 text-white font-bold rounded-full shadow-lg hover:bg-emerald-600 transition-colors duration-300">
-                Obter nova mensagem
-            </button>
+            
+            <div id="message-buttons" class="mt-4 flex flex-col sm:flex-row gap-2 items-center">
+                <button id="get-message-button" class="px-6 py-2 bg-emerald-500 text-white font-bold rounded-full shadow-lg hover:bg-emerald-600 transition-colors duration-300">
+                    Obter nova mensagem
+                </button>
+                <!-- Botões de compartilhamento/cópia. Um deles será exibido após o carregamento da mensagem. -->
+                <button id="share-button" class="px-6 py-2 bg-blue-500 text-white font-bold rounded-full shadow-lg hover:bg-blue-600 transition-colors duration-300 hidden">
+                    Compartilhar Mensagem
+                </button>
+                <button id="copy-button" class="px-6 py-2 bg-slate-500 text-white font-bold rounded-full shadow-lg hover:bg-slate-600 transition-colors duration-300 hidden">
+                    Copiar Mensagem
+                </button>
+            </div>
+            
+            <div id="copy-confirmation" class="copy-confirmation mt-2 text-sm text-green-600 font-semibold">
+                Mensagem copiada!
+            </div>
         </div>
 
         <!-- Seção do Carrossel de Ofertas (Inferior) -->
@@ -72,10 +95,15 @@
         const MESSAGE_API_URL = "https://script.google.com/macros/s/AKfycbxCvoSUZh1JjsnhBdgtUTi46Q9WPTEMyOhKa9TyM3ziPH29Y6g_5KPkEqOJ0ZO6dJJf/exec";
         const luckyMessageText = document.getElementById('lucky-message-text');
         const getMessageButton = document.getElementById('get-message-button');
+        const shareButton = document.getElementById('share-button');
+        const copyButton = document.getElementById('copy-button');
+        const copyConfirmation = document.getElementById('copy-confirmation');
         const MAX_RETRIES = 3;
 
         async function fetchLuckyMessage(retries = MAX_RETRIES) {
             getMessageButton.disabled = true;
+            shareButton.classList.add('hidden');
+            copyButton.classList.add('hidden');
             luckyMessageText.textContent = "Carregando...";
             
             try {
@@ -86,6 +114,12 @@
                 const data = await response.json();
                 if (data && data.message) {
                     luckyMessageText.textContent = data.message;
+                    // Verifica se a API de compartilhamento é suportada e mostra o botão correto
+                    if (navigator.share) {
+                        shareButton.classList.remove('hidden');
+                    } else {
+                        copyButton.classList.remove('hidden');
+                    }
                 } else {
                     luckyMessageText.textContent = "Não foi possível carregar as mensagens. A planilha pode estar vazia ou mal configurada.";
                 }
@@ -97,7 +131,51 @@
             }
         }
         
+        // Função para compartilhar a mensagem usando a API nativa
+        function shareMessage() {
+            const messageToShare = luckyMessageText.textContent;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mensagem do Dia',
+                    text: messageToShare,
+                }).then(() => {
+                    console.log('Mensagem compartilhada com sucesso!');
+                }).catch((error) => {
+                    console.error('Erro ao compartilhar:', error);
+                });
+            } else {
+                // Fallback para o botão de cópia, caso a API não seja suportada
+                copyMessage();
+            }
+        }
+
+        // Função para copiar a mensagem para a área de transferência
+        function copyMessage() {
+            const messageToCopy = luckyMessageText.textContent;
+            
+            // Cria um elemento de texto temporário para a cópia
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.value = messageToCopy;
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
+
+            try {
+                document.execCommand('copy');
+                copyConfirmation.classList.add('visible');
+                setTimeout(() => {
+                    copyConfirmation.classList.remove('visible');
+                }, 2000);
+            } catch (err) {
+                console.error('Falha ao copiar o texto:', err);
+                // Não usamos alert, então apenas logamos o erro e deixamos a UI como está
+            } finally {
+                document.body.removeChild(tempTextarea);
+            }
+        }
+
         getMessageButton.addEventListener('click', fetchLuckyMessage);
+        shareButton.addEventListener('click', shareMessage);
+        copyButton.addEventListener('click', copyMessage); // Mantém o listener para o fallback
 
         // --- Lógica do Carrossel de Ofertas ---
         // URL da planilha do Google Sheets para as ofertas
