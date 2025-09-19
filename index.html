@@ -134,10 +134,14 @@
         // Função para compartilhar a mensagem usando a API nativa
         function shareMessage() {
             const messageToShare = luckyMessageText.textContent;
+            const appUrl = window.location.href;
+            const fullMessage = `${messageToShare}\n\nConheça o App de Mensagens e Ofertas: ${appUrl}`;
+
             if (navigator.share) {
                 navigator.share({
                     title: 'Mensagem do Dia',
-                    text: messageToShare,
+                    text: fullMessage,
+                    url: appUrl
                 }).then(() => {
                     console.log('Mensagem compartilhada com sucesso!');
                 }).catch((error) => {
@@ -152,10 +156,12 @@
         // Função para copiar a mensagem para a área de transferência
         function copyMessage() {
             const messageToCopy = luckyMessageText.textContent;
-            
+            const appUrl = window.location.href;
+            const fullMessage = `${messageToCopy}\n\nConheça o App de Mensagens e Ofertas: ${appUrl}`;
+
             // Cria um elemento de texto temporário para a cópia
             const tempTextarea = document.createElement('textarea');
-            tempTextarea.value = messageToCopy;
+            tempTextarea.value = fullMessage;
             document.body.appendChild(tempTextarea);
             tempTextarea.select();
 
