@@ -102,6 +102,8 @@
         // --- Lógica do Carrossel de Ofertas ---
         // URL da planilha do Google Sheets para as ofertas
         const OFFERS_CSV_URL = "https://docs.google.com/spreadsheets/d/1S_BVbwRlP4Vpin5clCRC_2ILZTBzuhvqLQrSgUcfPxM/export?format=csv&gid=1150732258";
+        const OFFERS_CACHE_KEY = 'mosaico_offers_data';
+        const OFFERS_CACHE_EXPIRY = 3600000; // 1 hora em milissegundos
 
         const mainContainer = document.querySelector('.main-container');
         const contentSection = document.getElementById('content-area');
@@ -117,6 +119,29 @@
         let offerIntervalId = null;
         let isCollapsed = false;
 
+        function parseCsvLine(line) {
+            const result = [];
+            let inQuote = false;
+            let currentField = '';
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (char === '"') {
+                    inQuote = !inQuote;
+                    if (!inQuote && line[i + 1] === '"') {
+                        currentField += '"';
+                        i++;
+                    }
+                } else if (char === ',' && !inQuote) {
+                    result.push(currentField.trim());
+                    currentField = '';
+                } else {
+                    currentField += char;
+                }
+            }
+            result.push(currentField.trim());
+            return result;
+        }
+
         function delay(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
@@ -128,23 +153,26 @@
                     throw new Error(`Erro HTTP! Status: ${response.status}`);
                 }
                 let csvText = await response.text();
+
                 if (csvText.charCodeAt(0) === 0xFEFF) {
                     csvText = csvText.substring(1);
                 }
+
                 const lines = csvText.split('\n').filter(line => line.trim() !== '');
                 if (lines.length <= 1) {
                     console.warn(`O CSV da URL "${url}" não contém dados válidos.`);
                     return [];
                 }
-                const headers = lines[0].split(',').map(header => header.trim());
+                const headers = parseCsvLine(lines[0]).map(header => header.trim());
                 
                 const data = [];
                 for (const line of lines.slice(1)) {
-                    const values = line.split(',').map(value => value.trim());
+                    const values = parseCsvLine(line);
                     if (values.length >= headers.length) {
                         const row = {};
                         headers.forEach((header, index) => {
-                            row[header] = values[index];
+                            const value = (values[index] || '').replace(/\r$/, '');
+                            row[header] = value;
                         });
                         data.push(row);
                     }
@@ -182,33 +210,50 @@
 
                     contentTitleElement.textContent = itemName || "Oferta Especial";
                     contentImage.src = imgUrl || "https://placehold.co/120x120/E0E0E0/808080?text=Sem+Imagem";
-                    ctaButton.href = offerLink || "#";
-                    ctaButton.setAttribute('target', '_blank');
-                    ctaButton.setAttribute('rel', 'noopener noreferrer');
+                    
+                    if (offerLink) {
+                        ctaButton.href = offerLink;
+                        ctaButton.style.display = 'block';
+                    } else {
+                        ctaButton.style.display = 'none';
+                    }
                 }
                 contentWrapper.style.opacity = '1';
             }, 500);
         }
 
         async function fetchOffersAndStartRotation() {
-            try {
-                const rawOffersData = await fetchAndParseCsv(OFFERS_CSV_URL);
-                offersData = rawOffersData.filter(offer => offer.img && offer.img.trim() !== '');
+            let cachedData = sessionStorage.getItem(OFFERS_CACHE_KEY);
+            let cachedTime = sessionStorage.getItem(`${OFFERS_CACHE_KEY}_time`);
 
-                if (offersData.length > 0) {
-                    updateOffer();
-                    if (offerIntervalId) {
-                        clearInterval(offerIntervalId);
+            if (cachedData && cachedTime && (Date.now() - cachedTime < OFFERS_CACHE_EXPIRY)) {
+                offersData = JSON.parse(cachedData);
+            } else {
+                try {
+                    const rawOffersData = await fetchAndParseCsv(OFFERS_CSV_URL);
+                    offersData = rawOffersData.filter(offer => offer.img && offer.img.trim() !== '');
+
+                    if (offersData.length > 0) {
+                        sessionStorage.setItem(OFFERS_CACHE_KEY, JSON.stringify(offersData));
+                        sessionStorage.setItem(`${OFFERS_CACHE_KEY}_time`, Date.now());
+                    } else {
+                        offersData = [];
                     }
-                    offerIntervalId = setInterval(updateOffer, 10000); // Rota a cada 10 segundos
-                } else {
-                    if (offerIntervalId) {
-                        clearInterval(offerIntervalId);
-                    }
-                    contentSection.classList.add('hidden');
+                } catch (error) {
+                    offersData = [];
                 }
-            } catch (error) {
-                console.error("Erro ao buscar ofertas:", error);
+            }
+
+            if (offersData.length > 0) {
+                updateOffer();
+                if (offerIntervalId) {
+                    clearInterval(offerIntervalId);
+                }
+                offerIntervalId = setInterval(updateOffer, 10000); // Rota a cada 10 segundos
+            } else {
+                if (offerIntervalId) {
+                    clearInterval(offerIntervalId);
+                }
                 contentSection.classList.add('hidden');
             }
         }
