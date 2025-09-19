@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sua Mensagem e Oferta do Dia</title>
+    <title>Sua Mensagem</title>
     <!-- Open Graph Protocol para compartilhamento rico -->
-    <meta property="og:title" content="Sua Mensagem e Oferta do Dia">
-    <meta property="og:description" content="Receba uma mensagem inspiradora e encontre ofertas incríveis todos os dias.">
-    <meta property="og:image" content="https://placehold.co/1200x630/4ade80/ffffff?text=Mosaico+Digital">
+    <meta property="og:title" content="Sua Mensagem">
+    <meta property="og:description" content="Receba uma mensagem inspiradora.">
+    <meta property="og:image" content="logo.png">
     <meta property="og:url" content="https://canvas-app-url.com"> <!-- URL da sua aplicação -->
     <meta property="og:type" content="website">
 
@@ -64,16 +64,29 @@
             
             <div id="message-buttons" class="mt-6 flex flex-col sm:flex-row gap-4 items-center">
                 <button id="get-message-button" class="px-6 py-3 bg-emerald-500 text-white font-bold rounded-full shadow-lg hover:bg-emerald-600 transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.418 15v-5h-.582m-15.418-2H10a2 2 0 012 2v2a2 2 0 01-2 2H4m10 0h2m-6-15h2m-6 0h2m-2-4v5h.582m-15.418 15v-5h-.582m15.418-2H10a2 2 0 012 2v2a2 2 0 01-2 2H4m10 0h2m-6-15h2m-6 0h2m-2-4v5h.582m-15.418 15v-5h-.582m15.418-2H10a2 2 0 012 2v2a2 2 0 01-2 2H4m10 0h2m-6-15h2m-6 0h2m-2-4v5h.582m-15.418 15v-5h-.582m15.418-2H10a2 2 0 012 2v2a2 2 0 01-2 2H4m10 0h2m-6-15h2m-6 0h2"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.5 2C17.4 2 14 5.2 14 9.5S17.4 17 21.5 17h1.4c.6 0 1-.4 1-1V3c0-.6-.4-1-1-1z" />
+                        <path d="M3 13.5v-10c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2h-4c-1.1 0-2-.9-2-2z" />
+                        <path d="M12 9H4v11c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V9z" />
+                    </svg>
                     Obter nova mensagem
                 </button>
                 <!-- Botões de compartilhamento/cópia. Um deles será exibido após o carregamento da mensagem. -->
                 <button id="share-button" class="px-6 py-3 bg-blue-500 text-white font-bold rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 hidden flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.882 13.123 9 12.872 9 12.618a.616.616 0 00-.184-.442l-.184-.183a.616.616 0 00-.442-.184.616.616 0 00-.442.184l-.183.184a.616.616 0 00-.184.442.616.616 0 00.184.442l.183.184a.616.616 0 00.442.184.616.616 0 00.442-.184zm-4.342-4.342C4.316 8.882 4.123 9 3.872 9a.616.616 0 01-.442-.184l-.183-.184a.616.616 0 01-.184-.442.616.616 0 01.184-.442l.184-.183a.616.616 0 01.442-.184.616.616 0 01.442.184l.183.184a.616.616 0 01.184.442.616.616 0 01-.184.442zm8.684 0C13.882 8.882 14 8.872 14 8.618a.616.616 0 00-.184-.442l-.184-.183a.616.616 0 00-.442-.184.616.616 0 00-.442.184l-.183.184a.616.616 0 00-.184.442.616.616 0 00.184.442l.183.184a.616.616 0 00.442.184.616.616 0 00.442-.184z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 14l-6 6M15 8l-6 6"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="5" r="3" />
+                        <circle cx="6" cy="12" r="3" />
+                        <circle cx="18" cy="19" r="3" />
+                        <path d="M8.59 13.51l6.83 4.98" />
+                        <path d="M15.41 5.49l-6.83 4.98" />
+                    </svg>
                     Compartilhar Mensagem
                 </button>
                 <button id="copy-button" class="px-6 py-3 bg-slate-500 text-white font-bold rounded-full shadow-lg hover:bg-slate-600 transition-all duration-300 transform hover:scale-105 hidden flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
                     Copiar Mensagem
                 </button>
             </div>
@@ -151,7 +164,7 @@
 
             if (navigator.share) {
                 navigator.share({
-                    title: 'Sua Mensagem e Oferta do Dia',
+                    title: 'Sua Mensagem do Dia',
                     text: fullMessage,
                     url: appUrl
                 }).then(() => {
@@ -292,29 +305,24 @@
                 contentSection.classList.remove('hidden');
             }
 
-            contentWrapper.style.opacity = '0';
+            const randomIndex = Math.floor(Math.random() * offersData.length);
+            const randomOffer = offersData[randomIndex];
+            
+            if (randomOffer) {
+                const itemName = randomOffer['Item_Name'];
+                const offerLink = randomOffer['Offer_Link'];
+                const imgUrl = randomOffer['img'];
 
-            setTimeout(() => {
-                const randomIndex = Math.floor(Math.random() * offersData.length);
-                const randomOffer = offersData[randomIndex];
+                contentTitleElement.textContent = itemName || "Oferta Especial";
+                contentImage.src = imgUrl || "https://placehold.co/120x120/E0E0E0/808080?text=Sem+Imagem";
                 
-                if (randomOffer) {
-                    const itemName = randomOffer['Item_Name'];
-                    const offerLink = randomOffer['Offer_Link'];
-                    const imgUrl = randomOffer['img'];
-
-                    contentTitleElement.textContent = itemName || "Oferta Especial";
-                    contentImage.src = imgUrl || "https://placehold.co/120x120/E0E0E0/808080?text=Sem+Imagem";
-                    
-                    if (offerLink) {
-                        ctaButton.href = offerLink;
-                        ctaButton.style.display = 'block';
-                    } else {
-                        ctaButton.style.display = 'none';
-                    }
+                if (offerLink) {
+                    ctaButton.href = offerLink;
+                    ctaButton.style.display = 'block';
+                } else {
+                    ctaButton.style.display = 'none';
                 }
-                contentWrapper.style.opacity = '1';
-            }, 500);
+            }
         }
 
         async function fetchOffersAndStartRotation() {
