@@ -14,6 +14,8 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f0f2f5;
@@ -86,6 +88,12 @@
                 background-position: 0% 50%;
             }
         }
+
+        /* Fonte elegante para a mensagem */
+        .message-text {
+            font-family: 'Dancing Script', cursive;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 flex flex-col items-center p-4">
@@ -94,12 +102,12 @@
     <div class="main-container w-full max-w-2xl flex flex-col gap-4">
 
         <!-- Seção de Mensagens da Sorte (Topo) -->
-        <div class="message-app-container animated-bg shadow-lg rounded-3xl p-6 text-center flex flex-col items-center justify-center min-h-[150px] transform transition-transform duration-300 hover:scale-[1.01] backdrop-blur-md">
+        <div class="message-app-container animated-bg shadow-lg rounded-3xl p-6 text-center flex flex-col items-center justify-center min-h-[200px] transform transition-transform duration-300 hover:scale-[1.01] backdrop-blur-md">
             <!-- Título removido -->
-            <p id="lucky-message-text" class="text-xl md:text-2xl text-gray-700 font-semibold italic min-h-[50px] flex items-center justify-center animate-pulse">Buscando inspiração...</p>
+            <p id="lucky-message-text" class="message-text text-xl md:text-2xl text-gray-700 font-semibold min-h-[50px] flex items-center justify-center animate-pulse">Buscando inspiração...</p>
             
             <div id="message-buttons" class="mt-6 flex flex-col sm:flex-row gap-4 items-center">
-                <button id="get-message-button" class="px-6 py-3 bg-gradient-to-r from-emerald-400 to-emerald-600 text-white font-bold rounded-full shadow-lg hover:from-emerald-600 hover:to-emerald-800 transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
+                <button id="get-message-button" class="px-6 py-3 bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800 font-bold rounded-full shadow-lg hover:from-gray-500 hover:to-gray-700 hover:text-white transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 2a5 5 0 0 0-5 5c0 1.25.5 2.5 1.5 3.5L12 17l3.5-6.5C16.5 9.5 17 8.25 17 7a5 5 0 0 0-5-5z"></path>
                         <path d="M12 7v8"></path>
@@ -107,7 +115,7 @@
                     Buscar inspiração
                 </button>
                 <!-- Botões de compartilhamento/cópia. Um deles será exibido após o carregamento da mensagem. -->
-                <button id="share-button" class="px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-600 text-white font-bold rounded-full shadow-lg hover:from-blue-600 hover:to-blue-800 transition-all duration-300 transform hover:scale-105 hidden flex items-center gap-2">
+                <button id="share-button" class="px-6 py-3 bg-gradient-to-r from-emerald-400 to-emerald-500 text-white font-bold rounded-full shadow-lg hover:from-emerald-600 hover:to-emerald-800 transition-all duration-300 transform hover:scale-105 hidden flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="18" cy="5" r="3" />
                         <circle cx="6" cy="12" r="3" />
@@ -117,7 +125,7 @@
                     </svg>
                     Compartilhar Mensagem
                 </button>
-                <button id="copy-button" class="px-6 py-3 bg-gradient-to-r from-slate-400 to-slate-600 text-white font-bold rounded-full shadow-lg hover:from-slate-600 hover:to-slate-800 transition-all duration-300 transform hover:scale-105 hidden flex items-center gap-2">
+                <button id="copy-button" class="px-6 py-3 bg-gradient-to-r from-blue-200 to-blue-300 text-blue-800 font-bold rounded-full shadow-lg hover:from-blue-400 hover:to-blue-600 hover:text-white transition-all duration-300 transform hover:scale-105 hidden flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
