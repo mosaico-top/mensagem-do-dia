@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sua Mensagem</title>
+    <title>Sua Mensagem de Incentivo</title>
     <!-- Open Graph Protocol para compartilhamento rico -->
-    <meta property="og:title" content="Sua Mensagem do Dia">
+    <meta property="og:title" content="Sua Mensagem de Incentivo">
     <meta property="og:description" id="og-description" content="Receba uma mensagem inspiradora e especial.">
     <meta property="og:image" content="https://mosaico-top.github.io/mensagem-do-dia/logo.png">
     <meta property="og:url" content="https://mosaico-top.github.io/mensagem-do-dia/">
@@ -67,6 +67,15 @@
             display: flex;
             opacity: 1;
         }
+
+        /* Novo estilo para a seção de mensagens */
+        .message-app-container {
+            background-image: url('https://placehold.co/600x400/DDE3E8/808080?text=Sua+Inspira%C3%A7%C3%A3o');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: multiply;
+            background-color: rgba(255, 255, 255, 0.7); /* Adiciona uma camada branca para melhor leitura */
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 flex flex-col items-center p-4">
@@ -75,18 +84,18 @@
     <div class="main-container w-full max-w-2xl flex flex-col gap-4">
 
         <!-- Seção de Mensagens da Sorte (Topo) -->
-        <div class="message-app-container bg-white shadow-lg rounded-3xl p-6 text-center flex flex-col items-center justify-center min-h-[150px] transform transition-transform duration-300 hover:scale-[1.01]">
-            <h1 class="text-3xl font-extrabold text-gray-900 mb-4">Sua Mensagem do Dia</h1>
-            <p id="lucky-message-text" class="text-xl md:text-2xl text-gray-700 font-semibold italic min-h-[50px] flex items-center justify-center animate-pulse">Carregando...</p>
+        <div class="message-app-container shadow-lg rounded-3xl p-6 text-center flex flex-col items-center justify-center min-h-[150px] transform transition-transform duration-300 hover:scale-[1.01] backdrop-blur-md">
+            <!-- Título removido -->
+            <p id="lucky-message-text" class="text-xl md:text-2xl text-gray-700 font-semibold italic min-h-[50px] flex items-center justify-center animate-pulse">Buscando inspiração...</p>
             
             <div id="message-buttons" class="mt-6 flex flex-col sm:flex-row gap-4 items-center">
                 <button id="get-message-button" class="px-6 py-3 bg-emerald-500 text-white font-bold rounded-full shadow-lg hover:bg-emerald-600 transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21.5 2C17.4 2 14 5.2 14 9.5S17.4 17 21.5 17h1.4c.6 0 1-.4 1-1V3c0-.6-.4-1-1-1z" />
-                        <path d="M3 13.5v-10c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2h-4c-1.1 0-2-.9-2-2z" />
-                        <path d="M12 9H4v11c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V9z" />
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4"></path>
+                        <path d="M12 8h.01"></path>
                     </svg>
-                    Obter nova mensagem
+                    Buscar inspiração
                 </button>
                 <!-- Botões de compartilhamento/cópia. Um deles será exibido após o carregamento da mensagem. -->
                 <button id="share-button" class="px-6 py-3 bg-blue-500 text-white font-bold rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 hidden flex items-center gap-2">
@@ -114,7 +123,7 @@
         </div>
 
         <!-- Seção do Carrossel de Ofertas (Inferior) -->
-        <div id="content-area" class="content-section bg-white shadow-lg rounded-3xl p-6 min-h-[120px] flex flex-col justify-center items-center relative mt-4 transform transition-transform duration-300 hover:scale-[1.01]">
+        <div id="content-area" class="content-section bg-slate-100 shadow-lg rounded-3xl p-6 min-h-[120px] flex flex-col justify-center items-center relative mt-4 transform transition-transform duration-300 hover:scale-[1.01]">
             <button class="absolute top-4 right-4 p-2 bg-gray-300 rounded-full w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-400 transition-transform duration-300" id="collapse-button" title="Recolher Carrossel">
                 <svg id="collapse-icon-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M7 10l5 5 5-5z"/></svg>
                 <svg id="collapse-icon-down" style="display: none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M7 14l5-5 5 5z"/></svg>
@@ -125,7 +134,7 @@
             <div class="content-wrapper w-full flex flex-col md:flex-row items-center justify-center gap-6">
                 <img class="content-image w-36 h-36 md:w-28 md:h-28 object-cover rounded-2xl flex-shrink-0 shadow-lg transform transition-transform duration-300 hover:scale-105" id="content-image" src="" alt="Imagem da Oferta" onerror="this.src='https://placehold.co/120x120/E0E0E0/808080?text=Sem+Imagem';"/>
                 <div class="flex-grow text-center md:text-left flex flex-col items-center md:items-start">
-                    <h3 class="text-2xl font-bold text-gray-900" id="content-title"></h3>
+                    <h3 class="text-lg font-bold text-gray-900" id="content-title"></h3>
                     <p id="offer-description" class="offer-description text-gray-600 mt-2 text-sm md:text-base">Confira essa oferta especial!</p>
                     <a class="cta-button mt-4 px-8 py-3 bg-blue-500 text-white font-bold rounded-full shadow-md hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 text-sm md:text-base" id="cta-button" href="" target="_blank" rel="noopener noreferrer">Veja Mais...</a>
                 </div>
@@ -148,7 +157,7 @@
             getMessageButton.disabled = true;
             shareButton.classList.add('hidden');
             copyButton.classList.add('hidden');
-            luckyMessageText.textContent = "Carregando...";
+            luckyMessageText.textContent = "Buscando inspiração...";
             luckyMessageText.classList.add('animate-pulse');
             
             try {
@@ -186,11 +195,11 @@
         function shareMessage() {
             const messageToShare = luckyMessageText.textContent;
             const appUrl = window.location.href;
-            const fullMessage = `✨ Mensagem do Dia para você! ✨\n\n"${messageToShare}"\n\nConfira mais mensagens inspiradoras no App de Mensagens do dia: ${appUrl}`;
+            const fullMessage = `✨ Mensagem de Incentivo do Dia para você! ✨\n\n"${messageToShare}"\n\nConfira mais mensagens inspiradoras no App de Mensagens de Incentivo: ${appUrl}`;
 
             if (navigator.share) {
                 navigator.share({
-                    title: 'Sua Mensagem',
+                    title: 'Sua Mensagem de Incentivo',
                     text: fullMessage,
                     url: appUrl
                 }).then(() => {
@@ -208,7 +217,7 @@
         function copyMessage() {
             const messageToCopy = luckyMessageText.textContent;
             const appUrl = window.location.href;
-            const fullMessage = `✨ Mensagem do Dia para você! ✨\n\n"${messageToCopy}"\n\nConfira mais mensagens inspiradoras no App de Mensagens do dia: ${appUrl}`;
+            const fullMessage = `✨ Mensagem de Incentivo do Dia para você! ✨\n\n"${messageToCopy}"\n\nConfira mais mensagens inspiradoras no App de Mensagens de Incentivo: ${appUrl}`;
 
             // Cria um elemento de texto temporário para a cópia
             const tempTextarea = document.createElement('textarea');
