@@ -1,425 +1,212 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sua Mensagem de Incentivo</title>
-    <!-- Open Graph Protocol para compartilhamento rico -->
-    <meta property="og:title" content="Sua Mensagem de Incentivo">
-    <meta property="og:description" id="og-description" content="Receba uma mensagem inspiradora e especial.">
-    <meta property="og:image" content="https://mosaico-top.github.io/mensagem-do-dia/logo.png">
-    <meta property="og:url" content="https://mosaico-top.github.io/mensagem-do-dia/">
-    <meta property="og:type" content="website">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mensagens Motivacionais</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #d1fae5, #bfdbfe, #fef3c7);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-/* Carrossel – cartão elegante */
-.content-section {
-    background: rgba(255, 255, 255, 0.45);
-    backdrop-filter: blur(12px);
-    border-radius: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    overflow: hidden;
-}
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
 
-/* Animação de entrada de cada oferta */
-.content-wrapper {
-    opacity: 0;
-    transform: translateY(15px);
-    animation: slideUp 0.6s ease forwards;
-}
-@keyframes slideUp {
-    to {opacity: 1; transform: translateY(0);}
-}
+    /* Container principal */
+    .main-container {
+      width: 600px;
+      max-width: 90%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
-/* Título da oferta */
-#content-title {
-    font-size: 0.95rem;
-    font-weight: 400;
-    color: #374151;
-    transition: color 0.3s ease;
-}
-#content-title:hover {
-    color: #2563eb; /* leve destaque no hover */
-}
+    /* Cartão da mensagem */
+    .message-app-container {
+      padding: 24px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px) saturate(180%);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      text-align: center;
+    }
 
-/* Descrição */
-#offer-description {
-    font-size: 0.8rem;
-    color: #6b7280;
-    margin-top: 0.25rem;
-}
+    #lucky-message-text {
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: #1f2937;
+    }
 
-/* Botão CTA */
-.cta-button {
-    border-radius: 9999px;
-    font-size: 0.8rem;
-    padding: 0.55rem 1.4rem;
-    font-weight: 500;
-    background: linear-gradient(135deg, #60a5fa, #2563eb);
-    color: white;
-    transition: transform 0.25s ease;
-}
-.cta-button:hover {
-    transform: scale(1.05);
-}
-    </style>
+    /* Botões */
+    button, .cta-button {
+      position: relative;
+      overflow: hidden;
+      border: none;
+      cursor: pointer;
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      padding: 0.6rem 1.4rem;
+      font-weight: 500;
+      transition: transform 0.25s ease;
+    }
+    button:hover, .cta-button:hover {
+      transform: scale(1.05);
+    }
+    button::before, .cta-button::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.2) 10%, transparent 10.01%);
+      transform: scale(0);
+      transition: transform 0.4s ease;
+    }
+    button:hover::before, .cta-button:hover::before {
+      transform: scale(1);
+    }
+
+    /* Carrossel */
+    .content-section {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      text-align: center;
+    }
+
+    .content-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 1;
+      transition: all 0.4s ease;
+    }
+
+    .content-wrapper.fade-out {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .content-wrapper.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #content-title {
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: #374151;
+    }
+
+    #offer-description {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    .content-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+    .cta-button {
+      background: linear-gradient(135deg, #60a5fa, #2563eb);
+      color: white;
+      text-decoration: none;
+    }
+
+    /* Loading */
+    .loading-state {
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800 flex flex-col items-center p-4">
+<body>
+  <div class="main-container">
 
-    <!-- Container Principal do App -->
-    <div class="main-container w-full max-w-2xl flex flex-col gap-4">
-
-        <!-- Seção de Mensagens da Sorte (Topo) -->
-        <div class="message-app-container shadow-lg rounded-3xl p-6 text-center flex flex-col items-center justify-center min-h-[150px] transform transition-transform duration-300 hover:scale-[1.01] backdrop-blur-md">
-            <!-- Título removido -->
-            <p id="lucky-message-text" class="text-xl md:text-2xl text-gray-700 font-semibold italic min-h-[50px] flex items-center justify-center animate-pulse">Buscando inspiração...</p>
-            
-            <div id="message-buttons" class="mt-6 flex flex-col sm:flex-row gap-4 items-center">
-                <button id="get-message-button" class="px-6 py-3 bg-emerald-500 text-white font-bold rounded-full shadow-lg hover:bg-emerald-600 transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M12 16v-4"></path>
-                        <path d="M12 8h.01"></path>
-                    </svg>
-                    Buscar inspiração
-                </button>
-                <!-- Botões de compartilhamento/cópia. Um deles será exibido após o carregamento da mensagem. -->
-                <button id="share-button" class="px-6 py-3 bg-blue-500 text-white font-bold rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 hidden flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="18" cy="5" r="3" />
-                        <circle cx="6" cy="12" r="3" />
-                        <circle cx="18" cy="19" r="3" />
-                        <path d="M8.59 13.51l6.83 4.98" />
-                        <path d="M15.41 5.49l-6.83 4.98" />
-                    </svg>
-                    Compartilhar Mensagem
-                </button>
-                <button id="copy-button" class="px-6 py-3 bg-slate-500 text-white font-bold rounded-full shadow-lg hover:bg-slate-600 transition-all duration-300 transform hover:scale-105 hidden flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                    </svg>
-                    Copiar Mensagem
-                </button>
-            </div>
-            
-            <div id="copy-confirmation" class="copy-confirmation mt-2 text-sm text-green-600 font-semibold">
-                Mensagem copiada!
-            </div>
-        </div>
-
-        <!-- Seção do Carrossel de Ofertas (Inferior) -->
-        <div id="content-area" class="content-section bg-slate-100 shadow-lg rounded-3xl p-6 min-h-[120px] flex flex-col justify-center items-center relative mt-4 transform transition-transform duration-300 hover:scale-[1.01]">
-            <button class="absolute top-4 right-4 p-2 bg-gray-300 rounded-full w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-400 transition-transform duration-300" id="collapse-button" title="Recolher Carrossel">
-                <svg id="collapse-icon-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M7 10l5 5 5-5z"/></svg>
-                <svg id="collapse-icon-down" style="display: none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M7 14l5-5 5 5z"/></svg>
-            </button>
-            <div class="loading-state flex-grow text-center text-gray-500 font-semibold">
-                Carregando ofertas...
-            </div>
-            <div class="content-wrapper w-full flex flex-col md:flex-row items-center justify-center gap-6">
-                <img class="content-image w-36 h-36 md:w-28 md:h-28 object-cover rounded-2xl flex-shrink-0 shadow-lg transform transition-transform duration-300 hover:scale-105" id="content-image" src="" alt="Imagem da Oferta" onerror="this.src='https://placehold.co/120x120/E0E0E0/808080?text=Sem+Imagem';"/>
-                <div class="flex-grow text-center md:text-left flex flex-col items-center md:items-start">
-                    <h3 class="text-lg font-bold text-gray-900" id="content-title"></h3>
-                    <p id="offer-description" class="offer-description text-gray-600 mt-2 text-sm md:text-base">Confira essa oferta especial!</p>
-                    <a class="cta-button mt-4 px-8 py-3 bg-blue-500 text-white font-bold rounded-full shadow-md hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 text-sm md:text-base" id="cta-button" href="" target="_blank" rel="noopener noreferrer">Veja Mais...</a>
-                </div>
-            </div>
-        </div>
+    <!-- Mensagem principal -->
+    <div class="message-app-container">
+      <div id="lucky-message-text">✨ Sua mensagem aparecerá aqui</div>
     </div>
-    
-    <script>
-        // --- Lógica de Mensagens da Sorte ---
-        const MESSAGE_API_URL = "https://script.google.com/macros/s/AKfycbxCvoSUZh1JjsnhBdgtUTi46Q9WPTEMyOhKa9TyM3ziPH29Y6g_5KPkEqOJ0ZO6dJJf/exec";
-        const luckyMessageText = document.getElementById('lucky-message-text');
-        const getMessageButton = document.getElementById('get-message-button');
-        const shareButton = document.getElementById('share-button');
-        const copyButton = document.getElementById('copy-button');
-        const copyConfirmation = document.getElementById('copy-confirmation');
-        const ogDescriptionMeta = document.getElementById('og-description');
-        const MAX_RETRIES = 3;
 
-        async function fetchLuckyMessage(retries = MAX_RETRIES) {
-            getMessageButton.disabled = true;
-            shareButton.classList.add('hidden');
-            copyButton.classList.add('hidden');
-            luckyMessageText.textContent = "Buscando inspiração...";
-            luckyMessageText.classList.add('animate-pulse');
-            
-            try {
-                const response = await fetch(MESSAGE_API_URL);
-                if (!response.ok) {
-                    throw new Error(`Erro HTTP! Status: ${response.status}`);
-                }
-                const data = await response.json();
-                if (data && data.message) {
-                    luckyMessageText.textContent = data.message;
-                    updateMetaTags(data.message);
-                    // Verifica se a API de compartilhamento é suportada e mostra o botão correto
-                    if (navigator.share) {
-                        shareButton.classList.remove('hidden');
-                    } else {
-                        copyButton.classList.remove('hidden');
-                    }
-                } else {
-                    luckyMessageText.textContent = "Não foi possível carregar as mensagens. Tente novamente mais tarde.";
-                }
-            } catch (error) {
-                console.error(`Falha ao buscar mensagens:`, error);
-                luckyMessageText.textContent = "Erro de rede. Verifique a sua conexão ou a URL da planilha.";
-            } finally {
-                getMessageButton.disabled = false;
-                luckyMessageText.classList.remove('animate-pulse');
-            }
-        }
-        
-        function updateMetaTags(message) {
-            ogDescriptionMeta.setAttribute('content', message);
-        }
+    <!-- Carrossel de ofertas -->
+    <div id="content-section" class="content-section">
+      <div id="loading-offers" class="loading-state">Carregando ofertas...</div>
+      <div class="content-wrapper">
+        <img id="content-image" class="content-image" src="" alt="Oferta"/>
+        <div id="content-title"></div>
+        <div id="offer-description"></div>
+        <a id="cta-button" class="cta-button" href="#" target="_blank">Ver oferta</a>
+      </div>
+    </div>
 
-        // Função para compartilhar a mensagem usando a API nativa
-        function shareMessage() {
-            const messageToShare = luckyMessageText.textContent;
-            const appUrl = window.location.href;
-            const fullMessage = `✨ Mensagem de Incentivo do Dia para você! ✨\n\n"${messageToShare}"\n\nConfira mais mensagens inspiradoras no App de Mensagens de Incentivo: ${appUrl}`;
+  </div>
 
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Sua Mensagem de Incentivo',
-                    text: fullMessage,
-                    url: appUrl
-                }).then(() => {
-                    console.log('Mensagem compartilhada com sucesso!');
-                }).catch((error) => {
-                    console.error('Erro ao compartilhar:', error);
-                });
-            } else {
-                // Fallback para o botão de cópia, caso a API não seja suportada
-                copyMessage();
-            }
-        }
+  <script>
+    const OFFERS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQkqzJ6iHC8M9fMBk9FzWQON.../pub?gid=0&single=true&output=csv";
+    const OFFERS_CACHE_KEY = "offers_cache";
+    const OFFERS_CACHE_EXPIRY = 1000 * 60 * 10; // 10 minutos
 
-        // Função para copiar a mensagem para a área de transferência
-        function copyMessage() {
-            const messageToCopy = luckyMessageText.textContent;
-            const appUrl = window.location.href;
-            const fullMessage = `✨ Mensagem de Incentivo do Dia para você! ✨\n\n"${messageToCopy}"\n\nConfira mais mensagens inspiradoras no App de Mensagens de Incentivo: ${appUrl}`;
+    const contentSection = document.getElementById("content-section");
+    const contentWrapper = document.querySelector(".content-wrapper");
+    const contentTitleElement = document.getElementById("content-title");
+    const contentImage = document.getElementById("content-image");
+    const ctaButton = document.getElementById("cta-button");
+    const loadingOffers = document.getElementById("loading-offers");
+    const offerDescription = document.getElementById("offer-description");
 
-            // Cria um elemento de texto temporário para a cópia
-            const tempTextarea = document.createElement('textarea');
-            tempTextarea.value = fullMessage;
-            document.body.appendChild(tempTextarea);
-            tempTextarea.select();
+    let offersData = [];
+    let offerIntervalId = null;
 
-            try {
-                document.execCommand('copy');
-                copyConfirmation.classList.add('visible');
-                setTimeout(() => {
-                    copyConfirmation.classList.remove('visible');
-                }, 2000);
-            } catch (err) {
-                console.error('Falha ao copiar o texto:', err);
-            } finally {
-                document.body.removeChild(tempTextarea);
-            }
-        }
+    async function fetchAndParseCsv(url) {
+      const response = await fetch(url);
+      const text = await response.text();
+      const rows = text.split("\n").map(r => r.split(","));
+      const headers = rows.shift();
+      return rows.map(row => {
+        let obj = {};
+        row.forEach((val, i) => obj[headers[i]] = val);
+        return obj;
+      });
+    }
 
-        getMessageButton.addEventListener('click', fetchLuckyMessage);
-        shareButton.addEventListener('click', shareMessage);
-        copyButton.addEventListener('click', copyMessage); // Mantém o listener para o fallback
+    function updateOffer() {
+      if (offersData.length === 0) {
+        contentSection.classList.add('hidden');
+        return;
+      } else {
+        contentSection.classList.remove('hidden');
+      }
 
-        // --- Lógica do Carrossel de Ofertas ---
-        // URL da planilha do Google Sheets para as ofertas
-        const OFFERS_CSV_URL = "https://docs.google.com/spreadsheets/d/1S_BVbwRlP4Vpin5clCRC_2ILZTBzuhvqLQrSgUcfPxM/export?format=csv&gid=1150732258";
-        const OFFERS_CACHE_KEY = 'mosaico_offers_data';
-        const OFFERS_CACHE_EXPIRY = 3600000; // 1 hora em milissegundos
+      contentWrapper.classList.add('fade-out');
+      setTimeout(() => {
+        const randomIndex = Math.floor(Math.random() * offersData.length);
+        const randomOffer = offersData[randomIndex];
 
-        const mainContainer = document.querySelector('.main-container');
-        const contentSection = document.getElementById('content-area');
-        const contentWrapper = contentSection.querySelector('.content-wrapper');
-        const contentTitleElement = document.getElementById('content-title');
-        const ctaButton = document.getElementById('cta-button');
-        const contentImage = document.getElementById('content-image');
-        const collapseButton = document.getElementById('collapse-button');
-        const collapseIconUp = document.getElementById('collapse-icon-up');
-        const collapseIconDown = document.getElementById('collapse-icon-down');
+        if (randomOffer) {
+          const itemName = randomOffer['Item_Name'];
+          const offerLink = randomOffer['Offer_Link'];
+          const imgUrl = randomOffer['img'];
 
-        let offersData = [];
-        let offerIntervalId = null;
-        let isCollapsed = false;
-
-        function startLoadingState() {
-            contentSection.classList.add('loading');
-        }
-
-        function stopLoadingState() {
-            contentSection.classList.remove('loading');
-        }
-
-        function parseCsvLine(line) {
-            const result = [];
-            let inQuote = false;
-            let currentField = '';
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                if (char === '"') {
-                    inQuote = !inQuote;
-                    if (!inQuote && line[i + 1] === '"') {
-                        currentField += '"';
-                        i++;
-                    }
-                } else if (char === ',' && !inQuote) {
-                    result.push(currentField.trim());
-                    currentField = '';
-                } else {
-                    currentField += char;
-                }
-            }
-            result.push(currentField.trim());
-            return result;
-        }
-
-        function delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        async function fetchAndParseCsv(url, retries = MAX_RETRIES) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`Erro HTTP! Status: ${response.status}`);
-                }
-                let csvText = await response.text();
-
-                if (csvText.charCodeAt(0) === 0xFEFF) {
-                    csvText = csvText.substring(1);
-                }
-
-                const lines = csvText.split('\n').filter(line => line.trim() !== '');
-                if (lines.length <= 1) {
-                    console.warn(`O CSV da URL "${url}" não contém dados válidos.`);
-                    return [];
-                }
-                const headers = parseCsvLine(lines[0]).map(header => header.trim());
-                
-                const data = [];
-                for (const line of lines.slice(1)) {
-                    const values = parseCsvLine(line);
-                    if (values.length >= headers.length) {
-                        const row = {};
-                        headers.forEach((header, index) => {
-                            const value = (values[index] || '').replace(/\r$/, '');
-                            row[header] = value;
-                        });
-                        data.push(row);
-                    }
-                }
-                return data;
-            } catch (error) {
-                console.error(`Tentativa ${MAX_RETRIES - retries + 1} falhou ao buscar ou analisar o CSV de ${url}:`, error);
-                if (retries > 0) {
-                    await delay(1000 * (MAX_RETRIES - retries + 1));
-                    return fetchAndParseCsv(url, retries - 1);
-                }
-                return [];
-            }
-        }
-
-        function updateOffer() {
-            if (offersData.length === 0) {
-                console.warn("Nenhuma oferta disponível para exibir no carrossel.");
-                contentSection.classList.add('hidden');
-                return;
-            } else {
-                contentSection.classList.remove('hidden');
-            }
-
-            const randomIndex = Math.floor(Math.random() * offersData.length);
-            const randomOffer = offersData[randomIndex];
-            
-            if (randomOffer) {
-                const itemName = randomOffer['Item_Name'];
-                const offerLink = randomOffer['Offer_Link'];
-                const imgUrl = randomOffer['img'];
-
-                contentTitleElement.textContent = itemName || "Oferta Especial";
-                contentImage.src = imgUrl || "https://placehold.co/120x120/E0E0E0/808080?text=Sem+Imagem";
-                
-                if (offerLink) {
-                    ctaButton.href = offerLink;
-                    ctaButton.style.display = 'block';
-                } else {
-                    ctaButton.style.display = 'none';
-                }
-            }
-        }
-
-        async function fetchOffersAndStartRotation() {
-            startLoadingState();
-            let cachedData = sessionStorage.getItem(OFFERS_CACHE_KEY);
-            let cachedTime = sessionStorage.getItem(`${OFFERS_CACHE_KEY}_time`);
-
-            if (cachedData && cachedTime && (Date.now() - cachedTime < OFFERS_CACHE_EXPIRY)) {
-                offersData = JSON.parse(cachedData);
-            } else {
-                try {
-                    const rawOffersData = await fetchAndParseCsv(OFFERS_CSV_URL);
-                    offersData = rawOffersData.filter(offer => offer.img && offer.img.trim() !== '');
-
-                    if (offersData.length > 0) {
-                        sessionStorage.setItem(OFFERS_CACHE_KEY, JSON.stringify(offersData));
-                        sessionStorage.setItem(`${OFFERS_CACHE_KEY}_time`, Date.now());
-                    } else {
-                        offersData = [];
-                    }
-                } catch (error) {
-                    offersData = [];
-                }
-            }
-
-            if (offersData.length > 0) {
-                updateOffer();
-                stopLoadingState();
-                if (offerIntervalId) {
-                    clearInterval(offerIntervalId);
-                }
-                offerIntervalId = setInterval(updateOffer, 10000); // Rota a cada 10 segundos
-            } else {
-                if (offerIntervalId) {
-                    clearInterval(offerIntervalId);
-                }
-                contentSection.classList.add('hidden');
-            }
-        }
-        
-        function toggleCollapse() {
-            isCollapsed = !isCollapsed;
-            if (isCollapsed) {
-                mainContainer.classList.add('collapsed');
-                collapseIconDown.style.display = 'block';
-                collapseIconUp.style.display = 'none';
-                collapseButton.title = "Expandir Carrossel";
-            } else {
-                mainContainer.classList.remove('collapsed');
-                collapseIconDown.style.display = 'none';
-                collapseIconUp.style.display = 'block';
-                collapseButton.title = "Recolher Carrossel";
-            }
-        }
-
-        // --- Início da Execução ---
-        window.onload = function() {
-            fetchLuckyMessage(); // Carrega a primeira mensagem ao iniciar
-            fetchOffersAndStartRotation();
-            collapseButton.addEventListener('click', toggleCollapse);
-        };
-    </script>
-</body>
-</html>
-
-
-
-
-
+          contentTitleElement.textContent = itemName ||
