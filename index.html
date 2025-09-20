@@ -141,14 +141,14 @@
 
         <!-- Seção do Carrossel de Ofertas (Inferior) -->
         <div id="content-area" class="content-section bg-slate-100 shadow-lg rounded-3xl p-6 min-h-[120px] flex flex-col justify-center items-center relative mt-4 transform transition-transform duration-300 hover:scale-[1.01]">
-            <button class="absolute top-4 right-4 p-2 bg-gray-300 rounded-full w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-400 transition-transform duration-300" id="collapse-button" title="Recolher Carrossel">
+            <button class="absolute top-4 right-4 p-2 bg-gray-300 rounded-full w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-400 transition-transform duration-300 z-10" id="collapse-button" title="Recolher Carrossel">
                 <svg id="collapse-icon-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M7 10l5 5 5-5z"/></svg>
                 <svg id="collapse-icon-down" style="display: none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M7 14l5-5 5 5z"/></svg>
             </button>
             <div class="loading-state flex-grow text-center text-gray-500 font-semibold">
                 Carregando ofertas...
             </div>
-            <div class="content-wrapper w-full flex flex-col md:flex-row items-center justify-center gap-6">
+            <div class="content-wrapper w-full flex flex-col md:flex-row items-center justify-center gap-6 pr-10">
                 <img class="content-image w-36 h-36 md:w-28 md:h-28 object-cover rounded-2xl flex-shrink-0 shadow-lg transform transition-transform duration-300 hover:scale-105" id="content-image" src="" alt="Imagem da Oferta" onerror="this.src='https://placehold.co/120x120/E0E0E0/808080?text=Sem+Imagem';"/>
                 <div class="flex-grow text-center md:text-left flex flex-col items-center md:items-start">
                     <h3 class="text-lg text-gray-900" id="content-title"></h3>
