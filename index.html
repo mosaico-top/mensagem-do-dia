@@ -85,13 +85,6 @@
             font-family: 'Dancing Script', cursive;
             font-weight: 600;
         }
-        
-        /* Estilo para truncar o título da oferta com reticências */
-        .truncate-text {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 flex flex-col items-center">
@@ -144,13 +137,12 @@
         <div class="loading-state flex-grow text-center text-gray-500 font-semibold">
             Carregando ofertas...
         </div>
-        <div class="content-wrapper w-full flex items-center gap-3 pr-8">
+        <a id="content-link" href="#" target="_blank" rel="noopener noreferrer" class="content-wrapper w-full flex items-center gap-3 pr-8 no-underline text-current block">
             <img class="content-image w-16 h-16 object-cover rounded-xl flex-shrink-0 shadow-sm" id="content-image" src="" alt="Imagem da Oferta" onerror="this.src='https://placehold.co/64x64/E0E0E0/808080?text=Sem+Imagem';"/>
             <div class="flex-grow flex flex-col items-start min-w-0">
-                <h3 class="truncate-text text-sm md:text-md text-gray-900" id="content-title"></h3>
-                <a class="cta-button mt-2 px-4 py-1.5 bg-blue-500 text-white font-bold rounded-full shadow-md hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 text-xs md:text-sm" id="cta-button" href="" target="_blank" rel="noopener noreferrer">Veja Mais...</a>
+                <h3 class="text-sm md:text-md text-gray-900 font-normal" id="content-title"></h3>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- Mensagem de Rodapé sobre Publicidade -->
@@ -263,9 +255,8 @@
         const OFFERS_CACHE_EXPIRY = 3600000; // 1 hora em milissegundos
 
         const contentSection = document.getElementById('content-area');
-        const contentWrapper = contentSection.querySelector('.content-wrapper');
+        const contentLink = document.getElementById('content-link');
         const contentTitleElement = document.getElementById('content-title');
-        const ctaButton = document.getElementById('cta-button');
         const contentImage = document.getElementById('content-image');
         const collapseButton = document.getElementById('collapse-button');
         const collapseIconUp = document.getElementById('collapse-icon-up');
@@ -365,25 +356,17 @@
             const randomOffer = offersData[randomIndex];
             
             if (randomOffer) {
-                const itemName = randomOffer['Item_Name'];
+                let itemName = randomOffer['Item_Name'] || "Oferta Especial";
                 const offerLink = randomOffer['Offer_Link'];
                 const imgUrl = randomOffer['img'];
-                
-                // Trunca o título para no máximo 230 caracteres, adicionando "..."
-                const MAX_TITLE_LENGTH = 230;
-                let truncatedTitle = itemName || "Oferta Especial";
-                if (truncatedTitle.length > MAX_TITLE_LENGTH) {
-                    truncatedTitle = truncatedTitle.substring(0, MAX_TITLE_LENGTH) + '...';
-                }
 
-                contentTitleElement.textContent = truncatedTitle;
+                contentTitleElement.textContent = itemName;
                 contentImage.src = imgUrl || "https://placehold.co/64x64/E0E0E0/808080?text=Sem+Imagem";
                 
                 if (offerLink) {
-                    ctaButton.href = offerLink;
-                    ctaButton.style.display = 'block';
+                    contentLink.href = offerLink;
                 } else {
-                    ctaButton.style.display = 'none';
+                    contentLink.href = '#'; // Link vazio se não houver oferta
                 }
             }
         }
