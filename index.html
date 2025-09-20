@@ -14,68 +14,96 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5;
-        }
-        
-        /* Estilo para a transição do carrossel */
-        .content-section {
-            transition: min-height 0.3s ease-in-out;
-        }
-        .content-wrapper {
-            transition: opacity 0.5s ease-in-out;
-        }
+     body {
+    font-family: 'Inter', sans-serif;
+    /* Fundo gradiente animado */
+    background: linear-gradient(135deg, #d1fae5, #bfdbfe, #fef3c7);
+    background-size: 400% 400%;
+    animation: gradientBG 12s ease infinite;
+}
 
-        /* Estilos do estado recolhido do carrossel */
-        .main-container.collapsed .content-section {
-            min-height: 80px !important;
-        }
-        .main-container.collapsed .content-wrapper .cta-button,
-        .main-container.collapsed .content-wrapper .content-image,
-        .main-container.collapsed .content-wrapper .offer-description {
-            display: none !important;
-        }
-        .main-container.collapsed .content-wrapper .text-center {
-            text-align: center !important;
-            display: flex;
-            justify-content: center;
-        }
+@keyframes gradientBG {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
 
-        /* Estilo para a mensagem de confirmação */
-        .copy-confirmation {
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-        .copy-confirmation.visible {
-            opacity: 1;
-        }
+/* Cartão da mensagem estilo vidro */
+.message-app-container {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
 
-        /* Estilos para o estado de carregamento do carrossel */
-        .content-section.loading .content-wrapper {
-            opacity: 0;
-            display: none;
-        }
+/* Mensagem com gradiente animado */
+#lucky-message-text {
+    background: linear-gradient(90deg, #10b981, #3b82f6, #f59e0b);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
+}
 
-        .content-section .loading-state {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
+@keyframes shine {
+    to {background-position: 200% center;}
+}
 
-        .content-section.loading .loading-state {
-            display: flex;
-            opacity: 1;
-        }
+/* Botões com microinteração */
+button {
+    position: relative;
+    overflow: hidden;
+}
+button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 10%, transparent 10.01%);
+    transform: scale(0);
+    transition: transform 0.4s ease;
+}
+button:hover::before {
+    transform: scale(1);
+}
 
-        /* Novo estilo para a seção de mensagens */
-        .message-app-container {
-            background-image: url('https://mosaico-top.github.io/mensagem-do-dia/fundo.jpg');
-            background-size: cover;
-            background-position: center;
-            background-blend-mode: multiply;
-            background-color: rgba(255, 255, 255, 0.7); /* Adiciona uma camada branca para melhor leitura */
-        }
+/* Confirmação de cópia com animação */
+.copy-confirmation {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s ease-in-out;
+}
+.copy-confirmation.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Carrossel com animação de entrada */
+.content-wrapper {
+    animation: fadeIn 0.8s ease;
+}
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+/* Ajuste para estado recolhido */
+.main-container.collapsed .content-section {
+    min-height: 80px !important;
+}
+.main-container.collapsed .content-wrapper .cta-button,
+.main-container.collapsed .content-wrapper .content-image,
+.main-container.collapsed .content-wrapper .offer-description {
+    display: none !important;
+}
+.main-container.collapsed .content-wrapper .text-center {
+    text-align: center !important;
+    display: flex;
+    justify-content: center;
+}
+
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 flex flex-col items-center p-4">
@@ -430,4 +458,5 @@
     </script>
 </body>
 </html>
+
 
