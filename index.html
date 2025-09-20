@@ -20,28 +20,19 @@
             font-family: 'Inter', sans-serif;
             background-color: #f0f2f5;
         }
-        
-        /* Estilo para a transição do carrossel */
-        .content-section {
-            transition: min-height 0.3s ease-in-out;
-        }
-        .content-wrapper {
-            transition: opacity 0.5s ease-in-out;
-        }
 
         /* Estilos do estado recolhido do carrossel */
-        .main-container.collapsed .content-section {
-            min-height: 80px !important;
+        .content-section.collapsed {
+            height: 80px;
         }
-        .main-container.collapsed .content-wrapper .cta-button,
-        .main-container.collapsed .content-wrapper .content-image,
-        .main-container.collapsed .content-wrapper .offer-description {
+        .content-section.collapsed .content-wrapper,
+        .content-section.collapsed .cta-button,
+        .content-section.collapsed .content-image,
+        .content-section.collapsed .offer-description {
             display: none !important;
         }
-        .main-container.collapsed .content-wrapper .text-center {
-            text-align: center !important;
-            display: flex;
-            justify-content: center;
+        .content-section.collapsed .loading-state {
+            display: flex !important;
         }
 
         /* Estilo para a mensagem de confirmação */
@@ -94,17 +85,21 @@
             font-family: 'Dancing Script', cursive;
             font-weight: 600;
         }
+        
+        /* Estilo para truncar o título da oferta com reticências */
+        .truncate-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 flex flex-col items-center p-4">
+<body class="bg-gray-100 text-gray-800 flex flex-col items-center">
 
-    <!-- Container Principal do App -->
-    <div class="main-container w-full max-w-2xl flex flex-col gap-4">
-
-        <!-- Seção de Mensagens da Sorte (Topo) -->
-        <div class="message-app-container animated-bg shadow-lg rounded-3xl p-6 text-center flex flex-col items-center justify-center min-h-[200px] transform transition-transform duration-300 hover:scale-[1.01] backdrop-blur-md">
-            <!-- Título removido -->
-            <p id="lucky-message-text" class="message-text text-xl md:text-2xl text-gray-700 font-semibold min-h-[50px] flex items-center justify-center">Clique para sua dose diária de inspiração...</p>
+    <!-- Seção de Mensagens (Ocupa 65-70% da altura da tela e é centralizada) -->
+    <main class="flex flex-col items-center justify-center w-full flex-grow p-4 md:p-8">
+        <div class="message-app-container animated-bg shadow-lg rounded-3xl p-6 text-center flex flex-col items-center justify-center w-full max-w-2xl transform transition-transform duration-300 hover:scale-[1.01] backdrop-blur-md" style="min-height: 65vh;">
+            <p id="lucky-message-text" class="message-text text-4xl md:text-5xl lg:text-6xl text-gray-700 font-semibold min-h-[50px] flex items-center justify-center">Clique para sua dose diária de inspiração...</p>
             
             <div id="message-buttons" class="mt-6 flex flex-col sm:flex-row gap-4 items-center">
                 <button id="get-message-button" class="px-6 py-3 bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800 font-bold rounded-full shadow-lg hover:from-gray-500 hover:to-gray-700 hover:text-white transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
@@ -138,30 +133,29 @@
                 Mensagem copiada!
             </div>
         </div>
+    </main>
 
-        <!-- Seção do Carrossel de Ofertas (Inferior) -->
-        <div id="content-area" class="content-section bg-slate-100 shadow-lg rounded-3xl p-6 min-h-[120px] flex flex-col justify-center items-center relative mt-4 transform transition-transform duration-300 hover:scale-[1.01]">
-            <button class="absolute top-4 right-4 p-2 bg-gray-300 rounded-full w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-400 transition-transform duration-300 z-10" id="collapse-button" title="Recolher Carrossel">
-                <svg id="collapse-icon-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M7 10l5 5 5-5z"/></svg>
-                <svg id="collapse-icon-down" style="display: none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M7 14l5-5 5 5z"/></svg>
-            </button>
-            <div class="loading-state flex-grow text-center text-gray-500 font-semibold">
-                Carregando ofertas...
-            </div>
-            <div class="content-wrapper w-full flex flex-col md:flex-row items-center justify-center gap-6 pr-10">
-                <img class="content-image w-36 h-36 md:w-28 md:h-28 object-cover rounded-2xl flex-shrink-0 shadow-lg transform transition-transform duration-300 hover:scale-105" id="content-image" src="" alt="Imagem da Oferta" onerror="this.src='https://placehold.co/120x120/E0E0E0/808080?text=Sem+Imagem';"/>
-                <div class="flex-grow text-center md:text-left flex flex-col items-center md:items-start">
-                    <h3 class="text-lg text-gray-900" id="content-title"></h3>
-                    <p id="offer-description" class="offer-description text-gray-600 mt-2 text-sm md:text-base">Confira essa oferta especial!</p>
-                    <a class="cta-button mt-4 px-8 py-3 bg-blue-500 text-white font-bold rounded-full shadow-md hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 text-sm md:text-base" id="cta-button" href="" target="_blank" rel="noopener noreferrer">Veja Mais...</a>
-                </div>
+    <!-- Seção do Carrossel de Ofertas (Fixo na parte inferior) -->
+    <div id="content-area" class="content-section w-full max-w-2xl bg-slate-100 shadow-lg rounded-t-2xl p-3 flex flex-col justify-center items-center relative fixed bottom-0 left-1/2 -translate-x-1/2 z-50">
+        <button class="absolute top-2 right-2 p-1 bg-gray-300 rounded-full w-6 h-6 flex items-center justify-center text-gray-600 hover:bg-gray-400 transition-transform duration-300 z-10" id="collapse-button" title="Recolher Carrossel">
+            <svg id="collapse-icon-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M7 10l5 5 5-5z"/></svg>
+            <svg id="collapse-icon-down" style="display: none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M7 14l5-5 5 5z"/></svg>
+        </button>
+        <div class="loading-state flex-grow text-center text-gray-500 font-semibold">
+            Carregando ofertas...
+        </div>
+        <div class="content-wrapper w-full flex items-center gap-3 pr-8">
+            <img class="content-image w-16 h-16 object-cover rounded-xl flex-shrink-0 shadow-sm" id="content-image" src="" alt="Imagem da Oferta" onerror="this.src='https://placehold.co/64x64/E0E0E0/808080?text=Sem+Imagem';"/>
+            <div class="flex-grow flex flex-col items-start min-w-0">
+                <h3 class="truncate-text text-sm md:text-md text-gray-900" id="content-title"></h3>
+                <a class="cta-button mt-2 px-4 py-1.5 bg-blue-500 text-white font-bold rounded-full shadow-md hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 text-xs md:text-sm" id="cta-button" href="" target="_blank" rel="noopener noreferrer">Veja Mais...</a>
             </div>
         </div>
+    </div>
 
-        <!-- Mensagem de Rodapé sobre Publicidade -->
-        <div class="w-full max-w-2xl bg-gray-200 text-gray-600 text-center text-sm rounded-lg p-3 mt-4">
-            Este site não coleta suas informações pessoais. Para continuar oferecendo mensagens de forma gratuita e sem coletar seus dados, contamos com a ajuda de publicidade. Você ajuda o site sem pagar nada a mais por isso.
-        </div>
+    <!-- Mensagem de Rodapé sobre Publicidade -->
+    <div class="w-full max-w-2xl bg-gray-200 text-gray-600 text-center text-sm rounded-lg p-3 mt-4">
+        Este site não coleta suas informações pessoais. Para continuar oferecendo mensagens de forma gratuita e sem coletar seus dados, contamos com a ajuda de publicidade. Você ajuda o site sem pagar nada a mais por isso.
     </div>
     
     <script>
@@ -268,7 +262,6 @@
         const OFFERS_CACHE_KEY = 'mosaico_offers_data';
         const OFFERS_CACHE_EXPIRY = 3600000; // 1 hora em milissegundos
 
-        const mainContainer = document.querySelector('.main-container');
         const contentSection = document.getElementById('content-area');
         const contentWrapper = contentSection.querySelector('.content-wrapper');
         const contentTitleElement = document.getElementById('content-title');
@@ -375,9 +368,16 @@
                 const itemName = randomOffer['Item_Name'];
                 const offerLink = randomOffer['Offer_Link'];
                 const imgUrl = randomOffer['img'];
+                
+                // Trunca o título para no máximo 230 caracteres, adicionando "..."
+                const MAX_TITLE_LENGTH = 230;
+                let truncatedTitle = itemName || "Oferta Especial";
+                if (truncatedTitle.length > MAX_TITLE_LENGTH) {
+                    truncatedTitle = truncatedTitle.substring(0, MAX_TITLE_LENGTH) + '...';
+                }
 
-                contentTitleElement.textContent = itemName || "Oferta Especial";
-                contentImage.src = imgUrl || "https://placehold.co/120x120/E0E0E0/808080?text=Sem+Imagem";
+                contentTitleElement.textContent = truncatedTitle;
+                contentImage.src = imgUrl || "https://placehold.co/64x64/E0E0E0/808080?text=Sem+Imagem";
                 
                 if (offerLink) {
                     ctaButton.href = offerLink;
@@ -429,12 +429,12 @@
         function toggleCollapse() {
             isCollapsed = !isCollapsed;
             if (isCollapsed) {
-                mainContainer.classList.add('collapsed');
+                contentSection.classList.add('collapsed');
                 collapseIconDown.style.display = 'block';
                 collapseIconUp.style.display = 'none';
                 collapseButton.title = "Expandir Carrossel";
             } else {
-                mainContainer.classList.remove('collapsed');
+                contentSection.classList.remove('collapsed');
                 collapseIconDown.style.display = 'none';
                 collapseIconUp.style.display = 'block';
                 collapseButton.title = "Recolher Carrossel";
