@@ -8,7 +8,7 @@
     <meta property="og:title" content="Sua Mensagem do Dia">
     <meta property="og:description" id="og-description" content="Receba uma mensagem inspiradora e especial.">
     <meta property="og:image" content="https://mosaico-top.github.io/mensagem-do-dia/logo.png">
-    <meta property="og:url" content="https://canvas-app-url.com"> <!-- URL da sua aplicação -->
+    <meta property="og:url" content="https://mosaico-top.github.io/mensagem-do-dia/">
     <meta property="og:type" content="website">
 
     <!-- Tailwind CSS CDN -->
@@ -48,6 +48,23 @@
             transition: opacity 0.3s ease-in-out;
         }
         .copy-confirmation.visible {
+            opacity: 1;
+        }
+
+        /* Estilos para o estado de carregamento do carrossel */
+        .content-section.loading .content-wrapper {
+            opacity: 0;
+            display: none;
+        }
+
+        .content-section .loading-state {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .content-section.loading .loading-state {
+            display: flex;
             opacity: 1;
         }
     </style>
@@ -102,6 +119,9 @@
                 <svg id="collapse-icon-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M7 10l5 5 5-5z"/></svg>
                 <svg id="collapse-icon-down" style="display: none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M7 14l5-5 5 5z"/></svg>
             </button>
+            <div class="loading-state flex-grow text-center text-gray-500 font-semibold">
+                Carregando ofertas...
+            </div>
             <div class="content-wrapper w-full flex flex-col md:flex-row items-center justify-center gap-6">
                 <img class="content-image w-36 h-36 md:w-28 md:h-28 object-cover rounded-2xl flex-shrink-0 shadow-lg transform transition-transform duration-300 hover:scale-105" id="content-image" src="" alt="Imagem da Oferta" onerror="this.src='https://placehold.co/120x120/E0E0E0/808080?text=Sem+Imagem';"/>
                 <div class="flex-grow text-center md:text-left flex flex-col items-center md:items-start">
@@ -233,6 +253,14 @@
         let offerIntervalId = null;
         let isCollapsed = false;
 
+        function startLoadingState() {
+            contentSection.classList.add('loading');
+        }
+
+        function stopLoadingState() {
+            contentSection.classList.remove('loading');
+        }
+
         function parseCsvLine(line) {
             const result = [];
             let inQuote = false;
@@ -332,6 +360,7 @@
         }
 
         async function fetchOffersAndStartRotation() {
+            startLoadingState();
             let cachedData = sessionStorage.getItem(OFFERS_CACHE_KEY);
             let cachedTime = sessionStorage.getItem(`${OFFERS_CACHE_KEY}_time`);
 
@@ -355,6 +384,7 @@
 
             if (offersData.length > 0) {
                 updateOffer();
+                stopLoadingState();
                 if (offerIntervalId) {
                     clearInterval(offerIntervalId);
                 }
