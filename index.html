@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sua Mensagem de Incentivo</title>
+    <title>Inspiração Diária</title>
     <!-- Open Graph Protocol para compartilhamento rico -->
-    <meta property="og:title" content="Sua Mensagem de Incentivo">
-    <meta property="og:description" id="og-description" content="Receba uma mensagem inspiradora e especial.">
+    <meta property="og:title" content="Inspiração Diária">
+    <meta property="og:description" id="og-description" content="A sua dose diária de inspiração positiva.">
     <meta property="og:image" content="https://mosaico-top.github.io/mensagem-do-dia/logo.png">
     <meta property="og:url" content="https://mosaico-top.github.io/mensagem-do-dia/">
     <meta property="og:type" content="website">
@@ -104,7 +104,7 @@
         <!-- Seção de Mensagens da Sorte (Topo) -->
         <div class="message-app-container animated-bg shadow-lg rounded-3xl p-6 text-center flex flex-col items-center justify-center min-h-[200px] transform transition-transform duration-300 hover:scale-[1.01] backdrop-blur-md">
             <!-- Título removido -->
-            <p id="lucky-message-text" class="message-text text-xl md:text-2xl text-gray-700 font-semibold min-h-[50px] flex items-center justify-center animate-pulse">Buscando inspiração...</p>
+            <p id="lucky-message-text" class="message-text text-xl md:text-2xl text-gray-700 font-semibold min-h-[50px] flex items-center justify-center">Clique para sua dose diária de inspiração...</p>
             
             <div id="message-buttons" class="mt-6 flex flex-col sm:flex-row gap-4 items-center">
                 <button id="get-message-button" class="px-6 py-3 bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800 font-bold rounded-full shadow-lg hover:from-gray-500 hover:to-gray-700 hover:text-white transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
@@ -112,7 +112,7 @@
                         <path d="M12 2a5 5 0 0 0-5 5c0 1.25.5 2.5 1.5 3.5L12 17l3.5-6.5C16.5 9.5 17 8.25 17 7a5 5 0 0 0-5-5z"></path>
                         <path d="M12 7v8"></path>
                     </svg>
-                    Buscar inspiração
+                    Receber a inspiração
                 </button>
                 <!-- Botões de compartilhamento/cópia. Um deles será exibido após o carregamento da mensagem. -->
                 <button id="share-button" class="px-6 py-3 bg-gradient-to-r from-emerald-400 to-emerald-500 text-white font-bold rounded-full shadow-lg hover:from-emerald-600 hover:to-emerald-800 transition-all duration-300 transform hover:scale-105 hidden flex items-center gap-2">
@@ -217,11 +217,11 @@
         function shareMessage() {
             const messageToShare = luckyMessageText.textContent;
             const appUrl = window.location.href;
-            const fullMessage = `✨ Mensagem de Incentivo do Dia para você! ✨\n\n"${messageToShare}"\n\nConfira mais mensagens inspiradoras no App de Mensagens de Incentivo: ${appUrl}`;
+            const fullMessage = `A sua inspiração de hoje:\n\n"${messageToShare}"\n\nReceba a sua em: ${appUrl}`;
 
             if (navigator.share) {
                 navigator.share({
-                    title: 'Sua Mensagem de Incentivo',
+                    title: 'Inspiração Diária',
                     text: fullMessage,
                     url: appUrl
                 }).then(() => {
@@ -239,7 +239,7 @@
         function copyMessage() {
             const messageToCopy = luckyMessageText.textContent;
             const appUrl = window.location.href;
-            const fullMessage = `✨ Mensagem de Incentivo do Dia para você! ✨\n\n"${messageToCopy}"\n\nConfira mais mensagens inspiradoras no App de Mensagens de Incentivo: ${appUrl}`;
+            const fullMessage = `A sua inspiração de hoje:\n\n"${messageToCopy}"\n\nReceba a sua em: ${appUrl}`;
 
             // Cria um elemento de texto temporário para a cópia
             const tempTextarea = document.createElement('textarea');
