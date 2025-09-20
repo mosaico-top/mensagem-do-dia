@@ -216,14 +216,13 @@
         // Função para compartilhar a mensagem usando a API nativa
         function shareMessage() {
             const messageToShare = luckyMessageText.textContent;
-            const appUrl = window.location.href;
-            const fullMessage = `A sua inspiração de hoje:\n\n"${messageToShare}"\n\nReceba a sua em: ${appUrl}`;
+            const fullMessage = `A sua inspiração de hoje:\n\n"${messageToShare}"`;
 
             if (navigator.share) {
                 navigator.share({
                     title: 'Inspiração Diária',
                     text: fullMessage,
-                    url: appUrl
+                    url: window.location.href // Deixa o WhatsApp adicionar a URL
                 }).then(() => {
                     console.log('Mensagem compartilhada com sucesso!');
                 }).catch((error) => {
@@ -238,8 +237,7 @@
         // Função para copiar a mensagem para a área de transferência
         function copyMessage() {
             const messageToCopy = luckyMessageText.textContent;
-            const appUrl = window.location.href;
-            const fullMessage = `A sua inspiração de hoje:\n\n"${messageToCopy}"\n\nReceba a sua em: ${appUrl}`;
+            const fullMessage = `A sua inspiração de hoje:\n\n"${messageToCopy}"`;
 
             // Cria um elemento de texto temporário para a cópia
             const tempTextarea = document.createElement('textarea');
