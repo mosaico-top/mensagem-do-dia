@@ -167,7 +167,7 @@
                         copyButton.classList.remove('hidden');
                     }
                 } else {
-                    luckyMessageText.textContent = "Não foi possível carregar as mensagens. A planilha pode estar vazia ou mal configurada.";
+                    luckyMessageText.textContent = "Não foi possível carregar as mensagens. Tente novamente mais tarde.";
                 }
             } catch (error) {
                 console.error(`Falha ao buscar mensagens:`, error);
@@ -186,11 +186,11 @@
         function shareMessage() {
             const messageToShare = luckyMessageText.textContent;
             const appUrl = window.location.href;
-            const fullMessage = `✨ Mensagem do Dia para você! ✨\n\n"${messageToShare}"\n\nConfira mais mensagens inspiradoras no App de Mensagens e Ofertas: ${appUrl}`;
+            const fullMessage = `✨ Mensagem do Dia para você! ✨\n\n"${messageToShare}"\n\nConfira mais mensagens inspiradoras no App de Mensagens do dia: ${appUrl}`;
 
             if (navigator.share) {
                 navigator.share({
-                    title: 'Sua Mensagem e Oferta do Dia',
+                    title: 'Sua Mensagem',
                     text: fullMessage,
                     url: appUrl
                 }).then(() => {
@@ -208,7 +208,7 @@
         function copyMessage() {
             const messageToCopy = luckyMessageText.textContent;
             const appUrl = window.location.href;
-            const fullMessage = `✨ Mensagem do Dia para você! ✨\n\n"${messageToCopy}"\n\nConfira mais mensagens inspiradoras no App de Mensagens e Ofertas: ${appUrl}`;
+            const fullMessage = `✨ Mensagem do Dia para você! ✨\n\n"${messageToCopy}"\n\nConfira mais mensagens inspiradoras no App de Mensagens do dia: ${appUrl}`;
 
             // Cria um elemento de texto temporário para a cópia
             const tempTextarea = document.createElement('textarea');
